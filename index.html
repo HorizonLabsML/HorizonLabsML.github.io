@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+   <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2Z3B4803LF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2Z3B4803LF');
+</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Horizon Labs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <!-- Adding more fonts for variety -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet"> <!-- For handwritten style -->
+  <!-- NEW FONTS ADDED FOR MORE VARIETY -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Display:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@700&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="your-logo.png" type="image/png"> <!-- Favicon added here -->
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      /* Changed overflow to allow vertical scroll if needed, while hiding horizontal */
+      overflow-x: hidden; 
+      overflow-y: auto; /* Allows content to scroll vertically if it overflows */
+      display: flex; /* Use flexbox for overall layout */
+      flex-direction: column; /* Stack content vertically */
+      min-height: 100vh; /* Ensure body takes full viewport height */
+    }
+
+    /* Intro overlay styles */
+    #intro-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-color: #111827; /* Dark background for the intro screen */
+      z-index: 50; /* Ensures it's on top of everything else */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 1.5s cubic-bezier(0.83, 0, 0.17, 1); /* Smooth slide-out animation for the overlay */
+    }
+    #intro-overlay.hidden { transform: translateX(-100%); } /* Moves the overlay off-screen to the left */
+
+    /* Logo inside intro overlay */
+    #intro-overlay img {
+      width: 200px; /* Initial size of the logo */
+      height: auto;
+      /* Add transition for scale and opacity */
+      transition: transform 1.5s cubic-bezier(0.83, 0, 0.17, 1), opacity 1.5s cubic-bezier(0.83, 0, 0.17, 1);
+      transform: scale(1); /* Initial scale */
+      opacity: 1; /* Initial opacity */
+    }
+
+    /* Video background styles for the entire main content */
+    #full-video-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden; /* Ensures video stays within its container */
+      z-index: -1; /* Puts the video behind other content */
+    }
+
+    #full-video-background video {
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); /* Centers the video */
+      object-fit: cover; /* Ensures the video covers the entire container */
+    }
+
+    /* Overlay for darkening the video */
+    #full-video-background .overlay {
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black overlay */
+    }
+
+    /* Custom text shadow for the main dynamic text */
+    .text-shadow-strong {
+      text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8); /* Stronger, more visible drop shadow */
+    }
+
+    /* Custom fonts for dynamic industry text */
+    .font-montserrat { font-family: 'Montserrat', sans-serif; }
+    .font-robotomono { font-family: 'Roboto Mono', monospace; }
+    .font-playfair { font-family: 'Playfair Display', serif; }
+    .font-opensans { font-family: 'Open Sans', sans-serif; }
+    .font-dancing-script { font-family: 'Dancing Script', cursive; } /* Ensure this is available */
+    /* NEW FONT CLASSES */
+    .font-notosansdisplay { font-family: 'Noto Sans Display', sans-serif; }
+    .font-oswald { font-family: 'Oswald', sans-serif; }
+    .font-lora { font-family: 'Lora', serif; }
+    .font-merriweather { font-family: 'Merriweather', serif; }
+    .font-rubik { font-family: 'Rubik', sans-serif; }
+    .font-firacode { font-family: 'Fira Code', monospace; }
+
+
+    /* Custom colors for dynamic industry text */
+    .text-emerald-400 { color: #34d399; }
+    .text-purple-400 { color: #a78bfa; }
+    .text-yellow-300 { color: #fde047; }
+    .text-rose-400 { color: #fb7185; }
+    .text-indigo-400 { color: #818cf8; }
+    .text-pink-400 { color: #f472b6; }
+    /* NEW COLORS FOR VARIETY */
+    .text-teal-300 { color: #5eead4; }
+    .text-orange-400 { color: #fb923c; }
+    .text-lime-300 { color: #a3e635; }
+    .text-blue-300 { color: #93c5fd; }
+    .text-red-400 { color: #f87171; }
+    .text-green-300 { color: #86efac; }
+  </style>
+</head>
+<body class="bg-gray-900 text-white">
+
+  <!-- Intro Overlay - displayed briefly on page load -->
+  <div id="intro-overlay">
+    <!-- Replace 'your-logo.png' with the actual path to your logo if available -->
+    <img src="your-logo.png" alt="Horizon Labs Logo">
+  </div>
+
+  <!-- Navigation Bar (from the original video homepage) -->
+  <header class="fixed top-0 left-0 w-full bg-black/40 backdrop-blur z-40">
+    <div class="max-w-6xl mx-auto px-6 py-1 flex justify-between items-center">
+      <!-- Replace 'your-logo.png' with the actual path to your logo if available -->
+      <img src="your-logo.png" alt="Horizon Labs" class="h-12">
+      <nav class="space-x-6 text-sm uppercase font-light tracking-wider">
+        <a href="index.html" class="hover:text-cyan-400">Home</a>
+        <a href="solutions.html" class="hover:text-cyan-400">Solutions</a>
+        <a href="research.html" class="hover:text-cyan-400">Research</a>
+        <a href="contact.html" class="hover:text-cyan-400">Contact</a>
+        <a href="HAI1chat.html" class="hover:text-cyan-400">HAI 1 Chat</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Section - now solely the full-screen video background -->
+  <main id="main-content" class="min-h-screen relative flex items-center justify-center flex-grow">
+    <div id="full-video-background">
+      <video autoplay loop muted playsinline>
+        <source src="walking.mp4" type="video/mp4">
+        <!-- Fallback for browsers that do not support the video tag -->
+        Your browser does not support the video tag.
+      </video>
+      <div class="overlay"></div>
+    </div>
+    
+    <!-- Dynamic Text Overlay -->
+    <div class="absolute inset-0 flex flex-col items-center justify-center z-10">
+        <div class="text-center p-4">
+            <p class="text-white text-shadow-strong tracking-tight">
+                <span id="static-intro-text" class="text-6xl md:text-8xl font-light">We create AI for </span>
+                <span id="dynamic-industry-span" class="text-6xl md:text-8xl font-extrabold uppercase transition-opacity duration-500">
+                    <!-- Industry text, font, and color will be set by JavaScript -->
+                </span>
+            </p>
+        </div>
+        <!-- Replay button: professional, small icon, normal font, not tilted, transparent background -->
+        <button id="replay-button" class="mt-8 bg-transparent text-white text-sm font-normal hidden transition-colors duration-200 focus:outline-none flex items-center space-x-1 p-1 rounded-full border border-gray-600 hover:border-white">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 0020 13a8 8 0 00-15.356-2m0 0v5h.581m-.04-5.325a.75.75 0 111.04-1.135A10.001 10.001 0 0122 13c0 5.523-4.477 10-10 10S2 18.523 2 13a10.001 10.001 0 01.356-5.325m0 0a.75.75 0 11-1.04-1.135"></path>
+            </svg>
+            <span>Replay</span>
+        </button>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="w-full bg-black/40 backdrop-blur text-center py-4 text-sm text-gray-400 z-30">
+    Made with <span class="text-red-500">&hearts;</span> by Kshiteej Mali
+    <br>
+    <span class="text-xs text-gray-500 mt-1 block">Trademark &trade; Horizon Labs 2024. All rights reserved.</span>
+  </footer>
+
+  <script>
+    // JavaScript to handle the intro overlay animation (existing code)
+    document.addEventListener('DOMContentLoaded', () => {
+      const introOverlay = document.getElementById('intro-overlay');
+      const introLogo = introOverlay.querySelector('img'); 
+
+      setTimeout(() => { 
+        introOverlay.classList.add('hidden'); 
+        if (introLogo) {
+          introLogo.style.transform = 'scale(10)'; 
+          introLogo.style.opacity = '0'; 
+        }
+      }, 1200); 
+
+      introOverlay.addEventListener('transitionend', () => {
+        introOverlay.style.display = 'none';
+        // Now that intro is gone, explicitly allow body overflow-y to auto
+        document.body.style.overflowY = 'auto'; 
+      });
+
+      // JavaScript for dynamic text in front of the video
+      const staticIntroTextEl = document.getElementById('static-intro-text');
+      const dynamicIndustrySpanEl = document.getElementById('dynamic-industry-span');
+      const replayButtonEl = document.getElementById('replay-button'); 
+      
+      const industries = [
+        { name: "Automation", font: "font-notosansdisplay", color: "text-cyan-400" },
+        { name: "Healthcare", font: "font-oswald", color: "text-emerald-400" },
+        { name: "Finance", font: "font-lora", color: "text-purple-400" },
+        { name: "Logistics", font: "font-robotomono", color: "text-yellow-300" },
+        { name: "Creative Arts", font: "font-playfair", color: "text-rose-400" },
+        { name: "Scientific Research", font: "font-merriweather", color: "text-indigo-400" },
+        { name: "Education", font: "font-opensans", color: "text-pink-400" },
+        { name: "Manufacturing", font: "font-rubik", color: "text-teal-300" },
+        { name: "Cybersecurity", font: "font-firacode", color: "text-orange-400" },
+        { name: "Urban Planning", font: "font-montserrat", color: "text-lime-300" },
+        { name: "Astronomy", font: "font-playfair", color: "text-blue-300" },
+        { name: "you", font: "font-dancing-script", color: "text-red-400" } 
+      ];
+      let currentIndustryIndex = 0;
+      let intervalId; 
+
+      function updateIndustryText() {
+        const currentIndustry = industries[currentIndustryIndex];
+
+        dynamicIndustrySpanEl.classList.add('opacity-0'); 
+        
+        setTimeout(() => {
+          dynamicIndustrySpanEl.className = dynamicIndustrySpanEl.className.split(' ').filter(c => 
+            !c.startsWith('font-') && !c.startsWith('text-')
+          ).join(' ');
+          
+          dynamicIndustrySpanEl.classList.add('text-6xl', 'md:text-8xl', 'font-extrabold', 'uppercase', 'transition-opacity', 'duration-500');
+
+          dynamicIndustrySpanEl.textContent = currentIndustry.name;
+          dynamicIndustrySpanEl.classList.add(currentIndustry.font, currentIndustry.color);
+          
+          dynamicIndustrySpanEl.classList.remove('opacity-0'); 
+          
+          if (currentIndustryIndex === industries.length - 1) {
+            clearInterval(intervalId); 
+            replayButtonEl.classList.remove('hidden'); 
+          }
+
+          currentIndustryIndex = (currentIndustryIndex + 1) % industries.length;
+        }, 500); 
+      }
+
+      replayButtonEl.addEventListener('click', () => {
+        replayButtonEl.classList.add('hidden'); 
+        currentIndustryIndex = 0; 
+        updateIndustryText(); 
+        intervalId = setInterval(updateIndustryText, 1500); 
+      });
+
+      updateIndustryText(); 
+      intervalId = setInterval(updateIndustryText, 1500); 
+    });
+  </script>
+</body>
+</html>
+

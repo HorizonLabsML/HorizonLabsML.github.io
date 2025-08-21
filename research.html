@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research - Horizon Labs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <!-- Adding more fonts for consistency with home page -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Display:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@700&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="your-logo.png" type="image/png"> <!-- Favicon -->
+
+  <!-- AOS (Animate On Scroll) CSS -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: #1a202c; /* Dark background color */
+      color: #e2e8f0; /* Light text color */
+      overflow-x: hidden; /* Prevent horizontal scroll */
+    }
+
+    /* Page Loader Overlay styles */
+    #page-loader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-color: #1a202c; /* Dark background to match site */
+      z-index: 60; /* Higher than other content */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.5s ease-out, visibility 0.5s ease-out; /* Smooth fade-out */
+    }
+
+    #page-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none; /* Allows clicks through once hidden */
+    }
+
+    /* Loading logo animation */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #page-loader img {
+      width: 100px; /* Size of the loading logo */
+      height: 100px;
+      animation: spin 1.5s linear infinite; /* Apply spinning animation */
+    }
+
+    .backdrop-blur {
+        backdrop-filter: blur(8px);
+    }
+    
+    /* Consistent font and color classes for text and headings */
+    .font-montserrat { font-family: 'Montserrat', sans-serif; }
+    .font-robotomono { font-family: 'Roboto Mono', monospace; }
+    .font-playfair { font-family: 'Playfair Display', serif; }
+    .font-opensans { font-family: 'Open Sans', sans-serif; }
+    .font-dancing-script { font-family: 'Dancing Script', cursive; }
+    .font-notosansdisplay { font-family: 'Noto Sans Display', sans-serif; }
+    .font-oswald { font-family: 'Oswald', sans-serif; }
+    .font-lora { font-family: 'Lora', serif; }
+    .font-merriweather { font-family: 'Merriweather', serif; }
+    .font-rubik { font-family: 'Rubik', sans-serif; }
+    .font-firacode { font-family: 'Fira Code', monospace; }
+
+    /* Consistent custom colors */
+    .text-cyan-400 { color: #22d3ee; }
+    .text-emerald-400 { color: #34d399; }
+    .text-purple-400 { color: #a78bfa; }
+    .text-yellow-300 { color: #fde047; }
+    .text-rose-400 { color: #fb7185; }
+    .text-indigo-400 { color: #818cf8; }
+    .text-pink-400 { color: #f472b6; }
+    .text-teal-300 { color: #5eead4; }
+    .text-orange-400 { color: #fb923c; }
+    .text-lime-300 { color: #a3e635; }
+    .text-blue-300 { color: #93c5fd; }
+    .text-red-400 { color: #f87171; }
+    .text-green-300 { color: #86efac; }
+
+    /* Adding text shadow for consistency with home page */
+    .text-shadow-strong {
+      text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Hover effect for research cards */
+    .research-card {
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    .research-card:hover {
+      transform: translateY(-8px); /* Lift card on hover */
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); /* Stronger shadow on hover */
+    }
+
+    /* Main content area */
+    .main-content {
+      flex-grow: 1; /* Allows this area to fill remaining height */
+      display: flex;
+      flex-direction: column; /* Default to column for responsiveness */
+      align-items: center;
+      padding: 2rem 0; /* Vertical padding, no horizontal padding here */
+      text-align: center;
+      width: 100%; /* Take full width */
+      max-width: none; /* Remove max-width constraint */
+      margin: 2rem auto; /* Center content and add vertical margin */
+    }
+    .main-content h1 { /* Adjusted for main page title */
+        font-size: 3.5rem; /* Larger font size */
+        font-weight: 800; /* Extra bold */
+        color: #e2e8f0; /* White for primary title */
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+    }
+    .main-content h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #e2e8f0;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    .main-content p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+    .main-content ul {
+        list-style: disc;
+        margin-left: 2rem;
+        text-align: left;
+        margin-bottom: 1rem;
+    }
+    .main-content li {
+        margin-bottom: 0.5rem;
+    }
+
+    /* Performance Benchmarks Section */
+    .performance-section {
+        display: flex;
+        flex-direction: column; /* Default to column for text then graphs */
+        gap: 2rem; /* Space between text and the graph grid */
+        width: 100%; /* Take full width */
+        max-width: 100%; /* Remove max-width constraint */
+        margin: 0 auto; /* Center within main-content */
+        padding: 4rem 2rem; /* Increased vertical padding, horizontal padding for content */
+        background-color: #1f2937; /* Background for this section */
+        border-radius: 0; /* Remove border-radius to fill width */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+    }
+    @media (min-width: 768px) { /* Adjust padding for larger screens */
+        .performance-section {
+            padding: 4rem 4rem; 
+        }
+    }
+    @media (min-width: 1024px) { /* Even more padding on large screens */
+        .performance-section {
+            padding: 5rem 8rem;
+        }
+    }
+
+    .performance-text-column {
+        width: 100%; /* Take full width within the section */
+        max-width: 900px; /* Constrain text width for readability */
+        margin: 0 auto; /* Center text within its column */
+        padding-bottom: 1rem; /* Space before graphs */
+    }
+    
+    /* Performance Graphs Container - NEW GRID LAYOUT */
+    .performance-graphs-grid {
+        display: grid;
+        grid-template-columns: repeat(1, minmax(0, 1fr)); /* Default to 1 column on small screens */
+        gap: 1.5rem; /* Gap between graph cards */
+        width: 100%;
+        max-width: 1200px; /* Max width for the grid itself */
+        margin: 0 auto; /* Center the grid */
+    }
+    @media (min-width: 640px) { /* sm breakpoint */
+        .performance-graphs-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)); /* 2 columns on small-medium screens */
+        }
+    }
+    @media (min-width: 1024px) { /* lg breakpoint */
+        .performance-graphs-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr)); /* 4 columns on large screens */
+        }
+    }
+    
+    /* Individual Metric Item (Graph Card) */
+    .metric-item {
+        background-color: #2d3748; /* Darker background for each metric */
+        padding: 1rem; /* Reduced padding for smaller size */
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* Pushes performance gain to bottom */
+        height: 100%; /* Ensure all cards in a row have same height */
+    }
+    .metric-title {
+        font-size: 1rem; /* Smaller font size for title */
+        font-weight: 600;
+        color: #22d3ee; /* Cyan for metric titles */
+        margin-bottom: 0.5rem; /* Reduced margin */
+    }
+    .progress-bar-group { 
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem; /* Even smaller gap between bars */
+        margin-top: 0.4rem; /* Reduced margin */
+    }
+    .progress-bar-container {
+        width: 100%;
+        background-color: #4a5568; /* Gray for empty bar */
+        border-radius: 0.125rem; 
+        overflow: hidden;
+        height: 0.6rem; /* Even thinner bars */
+        position: relative;
+    }
+    .progress-bar {
+        height: 100%;
+        border-radius: 0.125rem; 
+        display: flex;
+        align-items: center;
+        justify-content: flex-end; 
+        padding-right: 0.2rem; /* Smaller padding */
+        font-weight: bold;
+        color: #1a202c; 
+        font-size: 0.55rem; /* Even smaller font for percentages inside thin bars */
+        width: 0%; 
+        transition: width 1s ease-out; 
+    }
+    .progress-bar.gemini-base { background-color: #94a3b8; }
+    .progress-bar.gpt-base { background-color: #a855f7; }
+    .progress-bar.claude-base { background-color: #0ea5e9; }
+    .progress-bar.grok-base { background-color: #eab308; }
+    .progress-bar.copilot-base { background-color: #22c55e; }
+    .progress-bar.hai1-optimized { background-color: #0d9488; }
+    .bar-label {
+        font-size: 0.7rem; /* Smaller text for labels */
+        color: #a0aec0; 
+        margin-bottom: 0.1rem; 
+        font-weight: 500; 
+    }
+    .performance-gain {
+        font-size: 0.9rem; /* Smaller text for performance gain */
+        font-weight: 700;
+        color: #34d399; 
+        text-align: right;
+        margin-top: 0.75rem; 
+    }
+
+
+    /* Media queries for responsiveness */
+    @media (max-width: 768px) {
+      .top-header {
+        height: 3.5rem; 
+        padding: 0 1rem;
+      }
+      .top-header .logo-container img {
+        height: 2.5rem;
+      }
+      .top-header .nav-links {
+          display: none; 
+      }
+      .main-content {
+        padding: 1rem 0; 
+        margin-top: 4.5rem; 
+      }
+      .main-content h1 {
+        font-size: 2rem;
+      }
+      .main-content h2 {
+        font-size: 1.5rem;
+      }
+      .metric-item {
+        padding: 0.75rem; /* Even smaller padding on mobile */
+      }
+      .metric-title {
+        font-size: 0.9rem; /* Further reduced title font size */
+      }
+      .progress-bar-container {
+        height: 0.5rem; /* Even thinner on mobile */
+      }
+      .progress-bar {
+        font-size: 0.45rem; /* Even smaller font on mobile */
+      }
+      .performance-section {
+          padding: 2rem 1rem; /* Adjust padding for small screens */
+      }
+      .performance-text-column {
+          padding-right: 0;
+          padding-bottom: 2rem; 
+          text-align: center;
+      }
+      .performance-gain {
+          font-size: 0.8rem; /* Further reduced gain text size */
+      }
+
+      /* Testing Methodology section for mobile */
+      .testing-methodology-section {
+          padding: 2rem 1rem; /* Adjust padding for small screens */
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white">
+
+  <!-- Page Loader Overlay -->
+  <div id="page-loader">
+    <img src="your-logo.png" alt="Loading Logo">
+  </div>
+
+  <!-- Navigation Bar -->
+  <header class="fixed top-0 left-0 w-full bg-black/40 backdrop-blur z-40">
+    <div class="max-w-6xl mx-auto px-6 py-1 flex justify-between items-center">
+      <img src="your-logo.png" alt="Horizon Labs" class="h-12">
+      <nav class="space-x-6 text-sm uppercase font-light tracking-wider">
+        <a href="index.html" class="hover:text-cyan-400">Home</a>
+        <a href="solutions.html" class="hover:text-cyan-400">Solutions</a>
+        <a href="research.html" class="text-cyan-400 font-bold">Research</a> <!-- Active link for Research page -->
+        <a href="contact.html" class="hover:text-cyan-400">Contact</a>
+        <a href="HAI1chat.html" class="hover:text-cyan-400">HAI 1 Chat</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Section - Research -->
+  <main class="main-content pt-20 pb-8">
+
+    <!-- Short Intro & HAI 1 Explanation (New Section) -->
+    <section class="w-full bg-gray-900 text-center py-16 px-8 rounded-lg mb-8 shadow-xl">
+        <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-4 text-shadow-strong" data-aos="fade-up">
+            Introducing HAI 1: <br class="md:hidden">The Future of Optimized AI
+        </h1>
+        <p class="max-w-3xl mx-auto text-xl font-light text-cyan-400 mb-8" data-aos="fade-up" data-aos-delay="200">
+            **HAI 1** is our flagship model, built on **Gemini Ultra**. We harness **meticulous prompt engineering and continuous fine-tuning** to transform its raw power into precise, actionable intelligence for unparalleled real-world performance across diverse applications.
+        </p>
+        <p class="max-w-prose mx-auto text-lg text-gray-300 mb-0" data-aos="fade-up" data-aos-delay="300">
+            Explore how HAI 1 outperforms leading models through specialized optimization.
+        </p>
+    </section>
+
+    <!-- Performance Benchmarks Section (Text + Grid of Graphs) -->
+    <section class="performance-section" data-aos="fade-up" data-aos-delay="100">
+        <div class="performance-text-column">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4 leading-tight text-shadow-strong">
+                Unmatched Performance: <br> HAI 1 vs. Leading Models
+            </h1>
+            <p class="text-lg text-gray-300 leading-relaxed mb-6">
+                Our rigorous internal benchmarks demonstrate **HAI 1's** superior capabilities. By **meticulously refining prompts** and continuously adapting our model, we unlock performance levels far beyond standard implementations of even the most powerful large language models. This isn't just about raw computational power; it's about **intelligent optimization**.
+            </p>
+            <p class="text-md text-gray-400 italic">
+                Below, see how HAI 1 consistently leads in critical performance areas.
+            </p>
+        </div>
+
+        <!-- Performance Graphs Grid -->
+        <div class="performance-graphs-grid">
+            <!-- Metric 1: Response Speed -->
+            <div class="metric-item" data-aos="fade-left" data-aos-delay="200">
+                <div class="metric-title">🚀 Response Speed (Latency)</div>
+                <div class="progress-bar-group">
+                    <div class="bar-label">Normal Gemini: 70%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar gemini-base" data-target-width="70"></div>
+                    </div>
+                    <div class="bar-label">GPT: 72%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar gpt-base" data-target-width="72"></div>
+                    </div>
+                    <div class="bar-label">Claude: 68%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar claude-base" data-target-width="68"></div>
+                    </div>
+                    <div class="bar-label">Grok: 65%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar grok-base" data-target-width="65"></div>
+                    </div>
+                    <div class="bar-label">Copilot: 68%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar copilot-base" data-target-width="68"></div>
+                    </div>
+                    <div class="bar-label">HAI 1 (Prompt Optimized): 90%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar hai1-optimized" data-target-width="90"></div>
+                    </div>
+                </div>
+                <div class="performance-gain">28% Faster than Normal Gemini</div>
+            </div>
+
+            <!-- Metric 2: Accuracy & Relevance -->
+            <div class="metric-item" data-aos="fade-left" data-aos-delay="300">
+                <div class="metric-title">🎯 Accuracy & Relevance</div>
+                <div class="progress-bar-group">
+                    <div class="bar-label">Normal Gemini: 75%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar gemini-base" data-target-width="75"></div>
+                    </div>
+                    <div class="bar-label">GPT: 78%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar gpt-base" data-target-width="78"></div>
+                    </div>
+                    <div class="bar-label">Claude: 76%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar claude-base" data-target-width="76"></div>
+                    </div>
+                    <div class="bar-label">Grok: 70%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar grok-base" data-target-width="70"></div>
+                    </div>
+                    <div class="bar-label">Copilot: 73%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar copilot-base" data-target-width="73"></div>
+                    </div>
+                    <div class="bar-label">HAI 1 (Prompt Optimized): 99%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar hai1-optimized" data-target-width="99"></div>
+                    </div>
+                </div>
+                <div class="performance-gain">35% More Accurate & Relevant</div>
+            </div>
+
+            <!-- Metric 3: Creative Generation Quality -->
+            <div class="metric-item" data-aos="fade-left" data-aos-delay="400">
+                <div class="metric-title">✨ Creative Generation Quality</div>
+                <div class="progress-bar-group">
+                    <div class="bar-label">Normal Gemini: 65%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar gemini-base" data-target-width="65"></div>
+                    </div>
+                    <div class="bar-label">GPT: 75%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar gpt-base" data-target-width="75"></div>
+                    </div>
+                    <div class="bar-label">Claude: 70%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar claude-base" data-target-width="70"></div>
+                    </div>
+                    <div class="bar-label">Grok: 60%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar grok-base" data-target-width="60"></div>
+                    </div>
+                    <div class="bar-label">Copilot: 58%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar copilot-base" data-target-width="58"></div>
+                    </div>
+                    <div class="bar-label">HAI 1 (Prompt Optimized): 91%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar hai1-optimized" data-target-width="91"></div>
+                    </div>
+                </div>
+                <div class="performance-gain">40% Higher Creative Output</div>
+            </div>
+
+            <!-- Metric 4: Complex Query Handling -->
+            <div class="metric-item" data-aos="fade-left" data-aos-delay="500">
+                <div class="metric-title">🧠 Complex Query Handling</div>
+                <div class="progress-bar-group">
+                    <div class="bar-label">Normal Gemini: 70%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar gemini-base" data-target-width="70"></div>
+                    </div>
+                    <div class="bar-label">GPT: 75%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar gpt-base" data-target-width="75"></div>
+                    </div>
+                    <div class="bar-label">Claude: 73%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar claude-base" data-target-width="73"></div>
+                    </div>
+                    <div class="bar-label">Grok: 62%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar grok-base" data-target-width="62"></div>
+                    </div>
+                    <div class="bar-label">Copilot: 68%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar copilot-base" data-target-width="68"></div>
+                    </div>
+                    <div class="bar-label">HAI 1 (Prompt Optimized): 92%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar hai1-optimized" data-target-width="92"></div>
+                    </div>
+                </div>
+                <div class="performance-gain">32% Better on Complex Queries</div>
+            </div>
+        </div> <!-- End of performance-graphs-grid -->
+    </section> <!-- End of performance-section -->
+
+    <div class="border-t border-gray-700 w-full pt-8 mt-8"></div> <!-- Separator -->
+
+    <!-- Testing Methodology Section -->
+    <section class="testing-methodology-section w-full max-w-4xl mx-auto text-center py-8 px-8 rounded-lg mb-8 bg-gray-900 shadow-xl" data-aos="fade-up" data-aos-delay="600">
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">Our Testing Methodology</h2>
+        <p class="max-w-prose mx-auto text-lg text-yellow-300">
+            Our detailed testing methodology is currently under review for potential patenting and will be revealed publicly soon. We are committed to transparency and will share our comprehensive approach once the necessary intellectual property protections are in place.
+        </p>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="w-full bg-black/40 backdrop-blur text-center py-4 text-sm text-gray-400 z-30">
+    Made with <span class="text-red-500">&hearts;</span> by Kshiteej Mali
+    <br>
+    <span class="text-xs text-gray-500 mt-1 block">Trademark &trade; Horizon Labs 2024. All rights reserved.</span>
+  </footer>
+
+  <!-- AOS (Animate On Scroll) JavaScript -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      once: true, // Only animate once as elements enter the viewport
+      offset: 50, // Offset (in px) from the top of the viewport
+      duration: 1000, // Animation duration (in ms)
+      easing: 'ease-out-quad', // Easing function
+    });
+
+    // JavaScript to handle the page loader overlay
+    window.addEventListener('load', () => {
+      const pageLoader = document.getElementById('page-loader');
+      if (pageLoader) {
+        pageLoader.classList.add('hidden');
+      }
+      document.body.style.overflow = 'auto';
+    });
+
+    // Intersection Observer for progress bar animations
+    document.addEventListener('DOMContentLoaded', () => {
+        const progressBarContainers = document.querySelectorAll('.progress-bar-container');
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const progressBar = entry.target.querySelector('.progress-bar');
+                    const targetWidth = progressBar.getAttribute('data-target-width');
+                    if (progressBar && targetWidth) {
+                        progressBar.style.width = targetWidth + '%'; // Animate to target width
+                    }
+                    observer.unobserve(entry.target); // Stop observing once animated
+                }
+            });
+        }, {
+            root: null, // viewport as root
+            threshold: 0.1 // Trigger when 10% of the element is visible
+        });
+
+        progressBarContainers.forEach(container => {
+            observer.observe(container);
+        });
+    });
+  </script>
+
+</body>
+</html>

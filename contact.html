@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - Horizon Labs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet"> <!-- For handwritten style -->
+
+  <!-- Adding more fonts for consistency with other pages -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Display:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@700&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="your-logo.png" type="image/png"> <!-- Favicon -->
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: #1a202c; /* Dark background color for the contact page */
+      color: #e2e8f0; /* Light text color */
+      overflow-x: hidden; /* Prevent horizontal scroll */
+    }
+
+    .backdrop-blur {
+        backdrop-filter: blur(8px);
+    }
+
+    /* Input field styling for the form */
+    .form-input {
+      background-color: rgba(255, 255, 255, 0.08); /* Slightly transparent input background */
+      border: 1px solid rgba(255, 255, 255, 0.15); /* Subtle border */
+      color: #e2e8f0;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem; /* Rounded corners */
+      width: 100%;
+      box-sizing: border-box; /* Include padding in width calculation */
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #00bcd4; /* Accent color on focus */
+      background-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .form-textarea {
+      min-height: 120px; /* Minimum height for textarea */
+      resize: vertical; /* Allow vertical resizing */
+    }
+
+    /* Custom font for handwritten style - still available if needed elsewhere */
+    .font-dancing-script {
+      font-family: 'Dancing Script', cursive;
+    }
+
+    /* Styles for fixed header from other pages */
+    .top-header {
+      width: 100%;
+      height: 4rem; /* Fixed height for the header */
+      background-color: #111827; /* Darker header background */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1.5rem; /* Horizontal padding */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      z-index: 40; /* Ensure header is above other content */
+      flex-shrink: 0; /* Prevent header from shrinking */
+    }
+    .top-header .logo-container { /* Renamed for clarity */
+        display: flex;
+        align-items: center;
+        gap: 0.75rem; /* Space between logo and text */
+    }
+    .top-header img {
+      height: 3rem; /* Adjust logo size */
+    }
+    .top-header .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem; /* Space between nav links */
+    }
+    .top-header .nav-link {
+      color: #e2e8f0; /* Light text for nav links */
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-weight: normal; /* Normal font weight for nav links */
+      transition: color 0.3s ease, transform 0.1s ease; /* Smooth transition for color and transform */
+      text-decoration: none; /* Remove underline for links */
+      text-transform: uppercase; /* Uppercase text as in homepage nav */
+      font-size: 0.875rem; /* sm text size */
+      letter-spacing: 0.05em; /* tracking-wider */
+    }
+    .top-header .nav-link:hover {
+      color: #22d3ee; /* Cyan-400 on hover */
+      transform: translateY(-1px);
+    }
+
+    /* Media queries for responsiveness */
+    @media (max-width: 768px) {
+      .top-header {
+        height: 3.5rem; /* Slightly smaller header on mobile */
+        padding: 0 1rem;
+      }
+      .top-header .logo-container img {
+        height: 2.5rem;
+      }
+      .top-header .nav-links {
+          display: none; /* Hide main nav links on small screens */
+      }
+      /* Adjust main content for fixed header on small screens */
+      .main-content {
+          padding-top: 4.5rem; /* Space for the header */
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white">
+
+  <!-- Navigation Bar (Consistent with Home, Solutions, Research pages) -->
+  <header class="fixed top-0 left-0 w-full bg-black/40 backdrop-blur z-40">
+    <div class="max-w-6xl mx-auto px-6 py-1 flex justify-between items-center top-header">
+      <img src="your-logo.png" alt="Horizon Labs" class="h-12">
+      <nav class="space-x-6">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="solutions.html" class="nav-link">Solutions</a>
+        <a href="research.html" class="nav-link">Research</a>
+        <a href="contact.html" class="nav-link text-cyan-400 font-bold">Contact</a> <!-- Active link -->
+        <a href="HAI1chat.html" class="nav-link">HAI 1 Chat</a> <!-- Added HAI 1 Chat link -->
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Section -->
+  <main class="flex-grow flex flex-col md:flex-row items-center justify-center p-8 bg-gray-800 pt-20"> <!-- Added pt-20 for header clearance -->
+    <!-- Left Section: Image and Name -->
+    <div class="w-full md:w-1/2 flex flex-col items-center justify-center p-4 md:p-8 relative">
+        <div class="relative flex flex-col items-center justify-center">
+            <!-- Your image, now a simple circular display -->
+            <img src="./me.jpg" alt="Kshiteej Mali"
+                 class="rounded-full border-4 border-cyan-500 shadow-lg w-64 h-64 object-cover">
+        </div>
+
+        <!-- Kshiteej Mali Name and Title Layout -->
+        <div class="mt-8 text-center">
+            <p class="text-4xl font-extrabold text-white leading-none">Kshiteej Mali</p>
+            <p class="text-xl font-light text-cyan-400 italic mt-2">CEO & Founder</p>
+        </div>
+    </div>
+
+    <!-- Right Section: Minimalist Contact Form -->
+    <div class="w-full md:w-1/2 flex items-center justify-center p-4 md:p-8">
+      <div class="bg-gray-900 bg-opacity-70 backdrop-blur rounded-lg shadow-xl p-8 max-w-lg w-full">
+        <h2 class="text-3xl font-extrabold text-white text-center mb-6">Contact Us</h2>
+        <!-- Formspree endpoint updated -->
+        <form action="https://formspree.io/f/myzpqeal" method="POST" class="space-y-4">
+          <!-- Hidden fields for Formspree to help with spam and redirection -->
+          <input type="hidden" name="_next" value="https://kshteej-mali.github.io/web/index.html?form_submitted=true" />
+          <input type="hidden" name="_subject" value="New Contact Form Submission from Horizon Labs Website" />
+
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-300 mb-1">Name</label>
+            <input type="text" id="name" name="name" class="form-input" placeholder="Your Name" required>
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+            <input type="email" id="email" name="email" class="form-input" placeholder="you@example.com" required>
+          </div>
+          <div>
+            <label for="subject" class="block text-sm font-medium text-gray-300 mb-1">Subject</label>
+            <input type="text" id="subject" name="subject" class="form-input" placeholder="Subject of your message" required>
+          </div>
+          <div>
+            <label for="message" class="block text-sm font-medium text-gray-300 mb-1">Message</label>
+            <textarea id="message" name="message" class="form-input form-textarea" placeholder="Your message here..." required></textarea>
+          </div>
+          <button type="submit" class="w-full py-3 mt-4 rounded-md bg-cyan-600 hover:bg-cyan-700 text-white font-bold transition-colors duration-200 shadow-md">
+            Send Message
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer (Consistent with Home, Solutions, Research pages) -->
+  <footer class="w-full bg-black/40 backdrop-blur text-center py-4 text-sm text-gray-400 z-30">
+    Made with <span class="text-red-500">&hearts;</span> by Kshiteej Mali
+    <br>
+    <span class="text-xs text-gray-500 mt-1 block">Trademark &trade; Horizon Labs 2024. All rights reserved.</span>
+  </footer>
+
+</body>
+</html>

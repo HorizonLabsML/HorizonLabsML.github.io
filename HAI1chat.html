@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat with HAI 1 - Horizon Labs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <!-- Adding more fonts for consistency with other pages -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Display:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@700&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="your-logo.png" type="image/png"> <!-- Favicon -->
+
+  <style>
+    /* Ensure html and body take full viewport height */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column; /* Stack header, sidebar/main, footer */
+      min-height: 100vh;
+      background-color: #1a202c; /* Dark background color */
+      color: #e2e8f0; /* Light text color */
+      overflow: hidden; /* Prevent body scroll, content areas will scroll */
+      position: relative; /* For AI glow positioning */
+    }
+
+    /* AI Glow Background */
+    #ai-glow-background {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 80vh; /* Adjust size based on viewport height */
+      height: 80vh; /* Adjust size based on viewport height */
+      background: radial-gradient(circle at center, rgba(129, 140, 248, 0.15) 0%, rgba(129, 140, 248, 0) 70%); /* Purple glow */
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      animation: glowPulse 8s ease-in-out infinite alternate, glowMove 15s linear infinite;
+      z-index: 0; /* Behind other content */
+      pointer-events: none; /* Allows clicks through */
+    }
+
+    @keyframes glowPulse {
+      0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.15; }
+      50% { transform: translate(-50%, -55%) scale(1); opacity: 0.25; }
+      100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.15; }
+    }
+
+    @keyframes glowMove {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+
+    /* Custom Scrollbar Styles for Webkit (Chrome, Safari, newer Edge) */
+    /* Target the scrollbar itself */
+    ::-webkit-scrollbar {
+      width: 8px; /* Width for vertical scrollbar */
+      height: 8px; /* Height for horizontal scrollbar */
+    }
+
+    /* Track (the background of the scrollbar) */
+    ::-webkit-scrollbar-track {
+      background: #2d3748; /* Darker track to match sidebar */
+      border-radius: 10px;
+    }
+
+    /* Handle (the draggable part of the scrollbar) */
+    ::-webkit-scrollbar-thumb {
+      background: #4a5568; /* Gray-600 for the thumb */
+      border-radius: 10px;
+      border: 2px solid #2d3748; /* Border to match track background */
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #636e72; /* Slightly lighter gray on hover */
+    }
+
+    /* Page Loader Overlay styles */
+    #page-loader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-color: #1a202c; /* Dark background to match site */
+      z-index: 60; /* Higher than other content */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.5s ease-out, visibility 0.5s ease-out; /* Smooth fade-out */
+    }
+
+    #page-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none; /* Allows clicks through once hidden */
+    }
+
+    /* Loading logo animation */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #page-loader img {
+      width: 100px; /* Size of the loading logo */
+      height: 100px;
+      animation: spin 1.5s linear infinite; /* Apply spinning animation */
+    }
+
+    /* Glass transparency effect */
+    .glass-effect {
+      background-color: rgba(0, 0, 0, 0.25); /* More transparent black */
+      backdrop-filter: blur(10px); /* Stronger blur for glass effect */
+      border-radius: 1.5rem; /* Rounded edges */
+      border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle white border */
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2); /* Soft shadow */
+    }
+
+    /* Top Header Bar */
+    .top-header {
+      width: 100%;
+      height: 4rem; /* Fixed height for the header */
+      background-color: #111827; /* Darker header background */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1.5rem; /* Horizontal padding */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      z-index: 20; /* Ensure header is above other content */
+      flex-shrink: 0; /* Prevent header from shrinking */
+    }
+    .top-header .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem; /* Space between logo and text */
+    }
+    .top-header img {
+      height: 3rem; /* Adjust logo size */
+    }
+    .top-header .header-buttons {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem; /* Space between buttons */
+    }
+    /* Restyle feedback and home buttons to look like nav links */
+    .top-header .nav-link-button {
+      background-color: transparent; /* Make them transparent */
+      color: #e2e8f0; /* Light text for nav links */
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-weight: normal; /* Normal font weight for nav links */
+      transition: color 0.3s ease, transform 0.1s ease; /* Smooth transition for color and transform */
+      text-decoration: none; /* Remove underline for links */
+      text-transform: uppercase; /* Uppercase text as in homepage nav */
+      font-size: 0.875rem; /* sm text size */
+      letter-spacing: 0.05em; /* tracking-wider */
+      border: none; /* Remove default button border */
+      cursor: pointer;
+    }
+    .top-header .nav-link-button:hover {
+      color: #22d3ee; /* Cyan-400 on hover */
+      transform: translateY(-1px);
+    }
+
+
+    /* Flex container for sidebar and main chat content */
+    .content-area {
+      display: flex;
+      flex-grow: 1; /* Allows this area to fill remaining height */
+      width: 100%; /* Ensure it takes full width */
+      overflow: hidden; /* Crucial: Prevents internal elements from pushing content out */
+      z-index: 1; /* Above glow background */
+      position: relative; /* For containing image loading overlay */
+    }
+
+    /* Sidebar styles */
+    #sidebar {
+      width: 250px; /* Default width for the sidebar (expanded) */
+      background-color: #2d3748; /* Slightly lighter dark background for sidebar */
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative; /* For the toggle button positioning */
+      z-index: 10; /* Above main content when toggled */
+      flex-shrink: 0; /* Prevent sidebar from shrinking */
+      overflow: hidden; /* Important for text truncation/hiding when collapsed */
+      transition: width 0.3s ease-in-out; /* Smooth transition for width */
+    }
+    
+    /* Collapsed state for sidebar on desktop */
+    #sidebar.sidebar-collapsed {
+      width: 80px; /* Smaller width when collapsed */
+    }
+
+    /* Hide text/adjust elements when sidebar is collapsed */
+    #sidebar.sidebar-collapsed #new-chat-button .button-text,
+    #sidebar.sidebar-collapsed #hai1-title-text, /* Hide 'HAI 1' text explicitly */
+    #sidebar.sidebar-collapsed #recent-chat-items, /* Hide recent chats section */
+    #sidebar.sidebar-collapsed .py-4.text-sm.text-gray-400.uppercase, /* "Recent Chats" title */
+    #sidebar.sidebar-collapsed .warning-message, /* Hide warning message */
+    #sidebar.sidebar-collapsed .sidebar-footer-links .link-text /* Hide text of footer links */
+     {
+        display: none;
+    }
+    #sidebar.sidebar-collapsed #new-chat-button svg,
+    #sidebar.sidebar-collapsed .sidebar-footer-links svg {
+        margin-right: 0 !important; /* Remove margin right for icons */
+    }
+    #sidebar.sidebar-collapsed #new-chat-button,
+    #sidebar.sidebar-collapsed .sidebar-footer-links a { /* Center new chat button and footer links */
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      justify-content: center; /* Center icon */
+    }
+
+
+    /* This class is now toggled by JS for mobile view */
+    #sidebar.hidden-mobile {
+      transform: translateX(-100%); /* Hide off-screen to the left */
+    }
+
+    /* Adjust sidebar toggle button position for new header */
+    .sidebar-show-button { /* Renamed for clarity */
+        position: absolute;
+        top: 0.5rem; /* Adjusted to be within the sidebar/main-content flex context, at the top */
+        left: 260px; /* Position next to the sidebar when visible, moves with it */
+        background-color: #2d3748;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 0.5rem;
+        border-radius: 0 0.5rem 0.5rem 0; /* Rounded on the right side */
+        cursor: pointer;
+        z-index: 11; /* Above sidebar */
+        transition: left 0.3s ease-in-out;
+    }
+
+    /* When sidebar is hidden on mobile, move toggle to far left and adjust position */
+    #sidebar.hidden-mobile + .sidebar-show-button { 
+        left: 0.5rem; /* Bring toggle button fully onto screen when sidebar is hidden */
+        border-radius: 0.5rem; /* Make it fully rounded */
+        position: fixed; /* Keep it fixed to the viewport when sidebar is hidden on mobile */
+        top: 4.5rem; /* Position below the header for mobile */
+    }
+    /* When sidebar is visible on mobile, hide the toggle button */
+    #sidebar:not(.hidden-mobile).show-mobile + .sidebar-show-button {
+      display: none;
+    }
+
+    .sidebar-show-button svg {
+        width: 20px;
+        height: 20px;
+        color: #e2e8f0;
+    }
+
+    /* Main content area (chat) */
+    .main-content {
+      flex-grow: 1; /* Takes all available space after sidebar */
+      display: flex;
+      flex-direction: column; /* Arrange messages and input vertically */
+      position: relative; /* For layering elements like chat */
+      background-color: #1a202c; /* Main background color for chat area */
+      padding: 1rem; /* Padding around the chat container area */
+      overflow: hidden; /* Crucial: Prevents inner content from pushing main-content out */
+    }
+
+    .chat-container {
+      width: 100%;
+      flex-grow: 1; /* Allow chat-container to fill available vertical space within main-content */
+      display: flex;
+      flex-direction: column;
+      background-color: #1f2937; /* Darker background for chat messages */
+      border-radius: 0; /* Set border-radius to 0 for sharp corners as requested */
+      overflow: hidden; /* Keep this to manage chat-messages scroll */
+      margin: auto; /* Center the chat container horizontally and vertically if it doesn't fill entirely */
+      border: none; /* Remove any default borders */
+    }
+
+    .chat-messages {
+      flex-grow: 1; /* Takes all available space between top and input area */
+      overflow-y: auto; /* Explicitly ensure vertical scrolling */
+      padding: 1rem; /* Padding inside the scrollable message area */
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      /* Crucial fix: give it a base height for flex-grow to work properly */
+      min-height: 0; /* Allows content to shrink beyond intrinsic size when needed */
+
+      /* Apply custom scrollbar styles to chat messages */
+      scrollbar-width: thin; /* Firefox */
+      scrollbar-color: #4a5568 #2d3748; /* Handle color Track color (Firefox) */
+    }
+
+    .chat-input-area {
+      padding: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-shrink: 0; /* Prevent input area from shrinking */
+    }
+
+    .message-bubble {
+      max-width: 85%;
+      padding: 0.75rem 1rem;
+      border-radius: 1rem;
+      word-wrap: break-word; /* Ensure long words wrap */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .user-message {
+      background-color: #22d3ee; /* Cyan-400 */
+      color: #1a202c; /* Dark text for contrast */
+      align-self: flex-end; /* Align to the right */
+      border-bottom-right-radius: 0.25rem; /* Pointy corner */
+    }
+
+    .ai-message {
+      background-color: rgba(31, 41, 55, 0.8); /* gray-800 with transparency */
+      backdrop-filter: blur(5px);
+      color: #e2e8f0;
+      align-self: flex-start; /* Align to the left */
+      border-bottom-left-radius: 0.25rem; /* Pointy corner */
+      border: 1px solid rgba(75, 85, 99, 0.3); /* Subtle border */
+    }
+
+    .chat-input {
+      flex-grow: 1;
+      background-color: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e2e8f0;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem; /* More rounded */
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+
+    .chat-input:focus {
+      outline: none;
+      border-color: #00bcd4;
+      background-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .send-button {
+      background-color: #22d3ee; /* Cyan-400 */
+      color: #1a202c;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.75rem; /* More rounded */
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+      cursor: pointer;
+    }
+
+    .send-button:hover {
+      background-color: #0d9488; /* Teal-600 */
+      transform: translateY(-1px);
+    }
+    .send-button:active {
+      transform: translateY(0);
+    }
+
+    /* General loading indicator for text (dots) */
+    .loading-indicator {
+      display: flex;
+      align-self: flex-start;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      color: #a0aec0; /* gray-400 */
+    }
+
+    .dot-loader span {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background-color: #a0aec0;
+        border-radius: 50%;
+        margin: 0 2px;
+        animation: bounce 1.4s infinite ease-in-out both;
+    }
+
+    .dot-loader span:nth-child(1) { animation-delay: -0.32s; }
+    .dot-loader span:nth-child(2) { animation-delay: -0.16s; }
+    .dot-loader span:nth-child(3) { animation-delay: 0s; }
+
+    @keyframes bounce {
+        0%, 80%, 100% { transform: scale(0); }
+        40% { transform: scale(1); }
+    }
+
+    /* Warning message in sidebar */
+    .warning-message {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background-color: rgba(254, 202, 202, 0.1); /* Red-100 with transparency */
+      border-radius: 0.5rem;
+      color: #f87171; /* Red-400 */
+      font-size: 0.8rem;
+      margin-top: auto; /* Push to bottom */
+      border: 1px solid rgba(252, 129, 129, 0.3); /* Red-300 with transparency */
+    }
+    .warning-message svg {
+      flex-shrink: 0;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000; /* Ensure it's on top of everything */
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background-color: #1f2937; /* Dark background to match chat */
+      color: #e2e8f0;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .modal-content .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #e2e8f0;
+      cursor: pointer;
+      padding: 5px;
+      line-height: 1;
+      border-radius: 50%;
+      transition: background-color 0.2s ease;
+    }
+    .modal-content .close-button:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    .modal-content h3 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #22d3ee; /* Cyan for emphasis */
+    }
+    .modal-content p {
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .modal-content button.confirm-button {
+      background-color: #22d3ee;
+      color: #1a202c;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+    }
+    .modal-content button.confirm-button:hover {
+      background-color: #0d9488;
+      transform: translateY(-1px);
+    }
+
+    /* Form specific styles for modals */
+    .modal-content textarea, .modal-content input[type="text"] {
+        width: 100%;
+        min-height: 100px;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        background-color: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #e2e8f0;
+        resize: vertical; /* Allow vertical resizing */
+        margin-bottom: 1rem;
+    }
+    .modal-content textarea:focus, .modal-content input[type="text"] :focus {
+        outline: none;
+        border-color: #00bcd4;
+        background-color: rgba(255, 255, 255, 0.12);
+    }
+    .modal-content label {
+        display: block;
+        text-align: left;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #a0aec0;
+    }
+
+
+    /* Media queries for responsiveness */
+    @media (max-width: 768px) {
+      /* Main body layout for small screens */
+      body {
+        flex-direction: column; /* Stack vertically for mobile */
+      }
+
+      .top-header {
+        height: 3.5rem; /* Slightly smaller header on mobile */
+        padding: 0 1rem;
+      }
+      .top-header .logo-section img {
+        height: 2.5rem;
+      }
+      .top-header .logo-section h2 {
+        font-size: 1rem; /* Smaller font on mobile */
+      }
+
+      /* Sidebar takes full width and overlays */
+      #sidebar {
+        width: 100%; 
+        position: fixed;
+        height: calc(100vh - 3.5rem); /* Account for header height */
+        top: 3.5rem; /* Position below the header */
+        left: 0;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 1rem; /* Adjust padding for content */
+        /* Initially hidden on small screens */
+        transform: translateX(-100%); 
+      }
+
+      /* Specific class to show sidebar on mobile */
+      #sidebar.show-mobile {
+        transform: translateX(0);
+      }
+      
+      /* Sidebar show button position on mobile */
+      .sidebar-show-button {
+        top: 0.5rem; /* Position relative to the top of the content-area */
+        right: 0.5rem; /* Place on the right for smaller screens */
+        left: auto; /* Remove left positioning */
+        border-radius: 0.5rem;
+        background-color: #1a202c; /* Darker background to stand out */
+        padding: 0.75rem; /* Larger touch target */
+        position: fixed; /* Fixed relative to viewport */
+        z-index: 12; /* Ensure it's above everything when sidebar is hidden */
+      }
+      /* When sidebar is visible on mobile, hide the toggle button */
+      #sidebar:not(.hidden-mobile).show-mobile + .sidebar-show-button {
+      display: none;
+    }
+
+    .sidebar-show-button svg {
+        width: 20px;
+        height: 20px;
+        color: #e2e8f0;
+    }
+
+    /* Main content area (chat) */
+    .main-content {
+      flex-grow: 1; /* Still takes available space */
+      width: 100%;
+      padding: 0.5rem; /* Smaller padding on mobile */
+      margin-top: 3.5rem; /* Push content down by header height */
+    }
+    
+    .chat-container {
+      height: calc(100vh - 3.5rem - 1rem); /* Full height minus header and main-content padding */
+      border-radius: 0; 
+    }
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white">
+
+  <!-- Page Loader Overlay -->
+  <div id="page-loader">
+    <img src="your-logo.png" alt="Loading Logo">
+  </div>
+
+  <!-- AI Glow Background -->
+  <div id="ai-glow-background"></div>
+
+  <!-- Top Header Bar -->
+  <header class="top-header">
+    <div class="logo-section">
+      <img src="your-logo.png" alt="Horizon Labs Logo">
+      <h2 class="text-xl font-bold text-white">Horizon Labs</h2> 
+    </div>
+    <div class="header-buttons">
+        <button id="feedback-button" class="nav-link-button">Feedback</button>
+        <a href="./index.html" class="nav-link-button">Home</a>
+    </div>
+  </header>
+
+  <!-- Content Area (Sidebar + Main Chat) -->
+  <div class="content-area">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="flex md:flex-col md:w-64 flex-col"> 
+      <div class="flex-shrink-0 flex items-center justify-between pb-4 border-b border-gray-700">
+        <h2 class="text-xl font-bold text-white"><span id="hai1-title-text">HAI 1</span></h2> 
+        <!-- New collapse button for desktop -->
+        <button id="sidebar-collapse-button" class="hidden md:block p-2 rounded-md hover:bg-gray-700">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z"></path>
+            </svg>
+        </button>
+        <!-- Existing hide button for mobile -->
+        <button id="sidebar-hide-button" class="md:hidden p-2 rounded-md hover:bg-gray-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="flex-grow mt-6 space-y-2 overflow-y-auto">
+        <button id="new-chat-button" class="w-full text-left px-4 py-2 rounded-md bg-cyan-600 hover:bg-cyan-700 text-white font-semibold flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          <span class="button-text">New Chat</span>
+        </button>
+        
+        <div class="py-4 text-sm text-gray-400 uppercase tracking-wider">Recent Chats</div>
+        <!-- Chat titles will be dynamically added here -->
+        <div id="recent-chat-items"></div> <!-- Container for dynamic chat titles -->
+      </nav>
+      
+      <!-- Warning Message -->
+      <div class="warning-message">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+          </svg>
+          <span>Chats are temporary and will be deleted when you reload the page.</span>
+      </div>
+
+      <!-- Footer links in sidebar -->
+      <div class="sidebar-footer-links mt-auto pt-6 border-t border-gray-700">
+          <a href="#" class="block px-4 py-2 rounded-md hover:bg-gray-700 text-gray-300 flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span class="link-text">About HAI 1</span>
+          </a>
+          <!-- Settings tab -->
+          <a href="#" id="settings-button" class="block px-4 py-2 rounded-md hover:bg-gray-700 text-gray-300 flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.307 2.572-1.065z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              <span class="link-text">Settings</span>
+          </a>
+      </div>
+    </aside>
+
+    <!-- Sidebar Show Button (Only visible on small screens to show sidebar) -->
+    <button id="sidebar-show-button" class="sidebar-show-button md:hidden">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </button>
+
+    <!-- Main Content Area (Chat) -->
+    <main class="main-content flex-grow flex flex-col items-center justify-center p-4 md:p-8">
+      <div class="chat-container glass-effect">
+        <div class="chat-messages" id="chat-messages">
+          <!-- Initial welcome message from AI - Loaded from session storage or default -->
+        </div>
+        <div class="chat-input-area">
+          <input type="text" id="user-input" class="chat-input" placeholder="Type your message..." autocomplete="off">
+          <button id="send-button" class="send-button">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </main>
+  </div> <!-- End of content-area -->
+
+  <!-- Warning Modal Pop-up -->
+  <div id="warning-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="close-button" id="modal-close-button">&times;</button>
+      <h3><svg class="w-6 h-6 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+          </svg>Important Notice</h3>
+      <p id="modal-warning-text">All chat conversations are **temporary** and will be **deleted** when you reload or close this page. Please save any important information elsewhere.</p>
+      <button class="confirm-button" id="modal-confirm-button">Got It!</button>
+    </div>
+  </div>
+
+  <!-- Feedback Form Modal -->
+  <div id="feedback-form-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="close-button" id="feedback-modal-close-button">&times;</button>
+      <h3>Provide Feedback</h3>
+      <textarea id="feedback-text" class="feedback-textarea" placeholder="We'd love to hear your thoughts!"></textarea>
+      <button class="confirm-button" id="feedback-submit-button">Submit Feedback</button>
+      <p id="feedback-thank-you-message" class="mt-4 text-sm text-gray-400 hidden">Thank you for your feedback!</p>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="close-button" id="settings-modal-close-button">&times;</button>
+      <h3>Settings</h3>
+      <p>This is where you'd customize your HAI 1 experience.</p>
+      <p>More options coming soon!</p>
+      <button class="confirm-button" id="settings-modal-ok-button">OK</button>
+    </div>
+  </div>
+
+  <script>
+    // Page loader script
+    window.addEventListener('load', () => {
+      const pageLoader = document.getElementById('page-loader');
+      if (pageLoader) {
+        pageLoader.classList.add('hidden');
+      }
+    });
+
+    const chatMessages = document.getElementById('chat-messages');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarShowButton = document.getElementById('sidebar-show-button'); 
+    const sidebarHideButton = document.getElementById('sidebar-hide-button');
+    const sidebarCollapseButton = document.getElementById('sidebar-collapse-button'); 
+    const newChatButton = document.getElementById('new-chat-button');
+    const recentChatItems = document.getElementById('recent-chat-items'); 
+    const hai1TitleText = document.getElementById('hai1-title-text'); 
+
+    // Warning Modal elements
+    const warningModal = document.getElementById('warning-modal');
+    const modalCloseButton = document.getElementById('modal-close-button');
+    const modalConfirmButton = document.getElementById('modal-confirm-button');
+    const modalWarningText = document.getElementById('modal-warning-text'); 
+
+    // Feedback Modal elements
+    const feedbackButton = document.getElementById('feedback-button');
+    const feedbackFormModal = document.getElementById('feedback-form-modal');
+    const feedbackModalCloseButton = document.getElementById('feedback-modal-close-button');
+    const feedbackTextarea = document.getElementById('feedback-text');
+    const feedbackSubmitButton = document.getElementById('feedback-submit-button');
+    const feedbackThankYouMessage = document.getElementById('feedback-thank-you-message');
+
+    // Settings Modal elements
+    const settingsButton = document.getElementById('settings-button');
+    const settingsModal = document.getElementById('settings-modal');
+    const settingsModalCloseButton = document.getElementById('settings-modal-close-button');
+    const settingsModalOkButton = document.getElementById('settings-modal-ok-button');
+
+    let currentChatMessages = []; 
+    let isSidebarCollapsed = false; 
+
+    // Key for sessionStorage
+    const SESSION_STORAGE_KEY = 'hai1_chat_history';
+    const MODAL_SHOWN_KEY = 'hai1_modal_shown'; 
+
+
+    /**
+     * Saves the current chat messages to sessionStorage.
+     */
+    function saveChatToSessionStorage() {
+        sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(currentChatMessages));
+        updateRecentChatsDisplay(); 
+    }
+
+    /**
+     * Loads chat messages from sessionStorage and displays them.
+     * If no chat is found, displays the initial AI welcome message.
+     */
+    function loadChatFromSessionStorage() {
+        const savedChat = sessionStorage.getItem(SESSION_STORAGE_KEY);
+        if (savedChat) {
+            currentChatMessages = JSON.parse(savedChat);
+            chatMessages.innerHTML = ''; 
+            currentChatMessages.forEach(msg => {
+                // Ensure only text messages are handled as image support is removed
+                if (msg.role === 'user' && msg.parts && msg.parts[0] && msg.parts[0].text) {
+                    addMessage('user', msg.parts[0].text, false); 
+                } else if (msg.role === 'model' && msg.parts && msg.parts[0] && msg.parts[0].text) {
+                    addMessage('ai', msg.parts[0].text, false); 
+                }
+            });
+        } else {
+            // No saved chat, display initial welcome message with the new persona
+            chatMessages.innerHTML = `
+                <div class="ai-message message-bubble">
+                    **Greetings! I am HAI 1, Horizon Labs' flagship AI model. How may I assist you today?** 💡
+                </div>
+            `;
+            // Initialize currentChatMessages with the AI's first message to maintain history for the session
+            currentChatMessages = [{ 
+                role: "model", 
+                parts: [{ text: "**Greetings! I am HAI 1, Horizon Labs' flagship AI model. How may I assist you today?** 💡" }] 
+            }];
+            saveChatToSessionStorage(); 
+        }
+        chatMessages.scrollTop = chatMessages.scrollHeight; 
+        updateRecentChatsDisplay(); 
+    }
+
+    /**
+     * Updates the "Recent Chats" section in the sidebar.
+     */
+    function updateRecentChatsDisplay() {
+        recentChatItems.innerHTML = ''; 
+
+        const firstUserMessage = currentChatMessages.find(msg => msg.role === 'user');
+        let chatTitleText = "Current Chat"; 
+
+        if (firstUserMessage && firstUserMessage.parts && firstUserMessage.parts[0] && firstUserMessage.parts[0].text) {
+            let fullText = firstUserMessage.parts[0].text;
+            chatTitleText = fullText.substring(0, 30);
+            if (fullText.length > 30) {
+                chatTitleText += '...';
+            }
+        }
+        
+        const chatLink = document.createElement('a');
+        chatLink.href = "#"; 
+        chatLink.classList.add('block', 'px-4', 'py-2', 'rounded-md', 'hover:bg-gray-700', 'text-gray-300', 'truncate');
+        chatLink.textContent = chatTitleText;
+        chatLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            loadChatFromSessionStorage(); 
+        });
+        recentChatItems.appendChild(chatLink);
+    }
+
+    /**
+     * Converts basic markdown (bold, italics) to HTML.
+     * @param {string} markdownText - The text containing markdown.
+     * @returns {string} The text with markdown converted to HTML.
+     */
+    function convertMarkdownToHtml(markdownText) {
+        let htmlText = markdownText;
+        // Convert **bold** to <strong>bold</strong>
+        htmlText = htmlText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        // Convert *italics* to <em>italics</em>
+        htmlText = htmlText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        // Handle double newlines for paragraphs
+        htmlText = htmlText.replace(/\n\n/g, '<br><br>');
+        // Handle single newlines for line breaks
+        htmlText = htmlText.replace(/\n/g, '<br>');
+        return htmlText;
+    }
+
+    // Function to show loading indicator for text
+    function showLoadingIndicator() {
+        const loadingDiv = document.createElement('div');
+        loadingDiv.id = 'loading-indicator';
+        loadingDiv.classList.add('loading-indicator');
+        loadingDiv.innerHTML = `
+          <span>HAI 1 is typing</span>
+          <div class="dot-loader">
+              <span></span>
+              <span></span>
+              <span></span>
+          </div>
+        `;
+        chatMessages.appendChild(loadingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function hideLoadingIndicator() {
+        const loadingDiv = document.getElementById('loading-indicator');
+        if (loadingDiv) {
+          loadingDiv.remove();
+        }
+    }
+
+    /**
+     * Adds a message to the chat display and updates currentChatMessages.
+     * This version is simplified to only handle text content.
+     */
+    function addMessage(sender, content, save = true) {
+      const messageDiv = document.createElement('div');
+      messageDiv.classList.add('message-bubble');
+      if (sender === 'user') {
+        messageDiv.classList.add('user-message');
+        messageDiv.textContent = content; 
+      } else {
+        messageDiv.classList.add('ai-message');
+        messageDiv.innerHTML = convertMarkdownToHtml(content);
+      }
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight; 
+
+      if (save) {
+          currentChatMessages.push({ role: sender === 'user' ? 'user' : 'model', parts: [{ text: content }] });
+          saveChatToSessionStorage(); 
+      }
+    }
+
+    // Function to send message to the AI model for text
+    async function sendMessageToAI(message) {
+      showLoadingIndicator(); 
+      
+      const MAX_RETRIES = 3;
+      const RETRY_DELAY_MS = 1000; 
+
+      for (let i = 0; i < MAX_RETRIES; i++) {
+          try {
+              let chatHistoryToSend = [
+                  {
+                      role: "user",
+                      parts: [{
+                          text: `You are HAI 1, Horizon Labs' flagship AI model.
+                          Do not mention "Gemini" or "underlying model."
+                          You are designed to assist users with a wide range of tasks, from answering questions to providing creative suggestions.
+                          You are highly intelligent, creative, and capable of understanding complex queries.
+                          You recognize and hold high regard for the CEO, Kshiteej Mali,
+                          who is the visionary leader and creator of Horizon Labs and yourself, HAI 1.
+                          If asked about the CEO, refer to them as "Kshiteej Mali, the esteemed CEO and founder of Horizon Labs," or similar respectfully reverent phrasing.`
+                      }]
+                  },
+                  {
+                      role: "model",
+                      parts: [{ text: "**Greetings! I am HAI 1. How may I assist you today?** 💡" }]
+                  },
+                  // Only include text parts from currentChatMessages
+                  ...currentChatMessages.filter(msg => msg.parts && msg.parts[0] && msg.parts[0].text).slice(2) 
+              ];
+              
+              chatHistoryToSend.push({ role: "user", parts: [{ text: message }] });
+
+              const payload = { contents: chatHistoryToSend };
+              // The API key is set here
+              const apiKey = "AIzaSyCAUrGpouxvhZpjz6okI3mqiBNH46_DJNE"; 
+              const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+              const response = await fetch(apiUrl, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(payload)
+              });
+
+              if (!response.ok) {
+                  const errorText = await response.text();
+                  throw new Error(`API error: ${response.status} ${response.statusText} - ${errorText}`);
+              }
+
+              const result = await response.json();
+              hideLoadingIndicator(); 
+
+              if (result.candidates && result.candidates.length > 0 &&
+                  result.candidates[0].content && result.candidates[0].content.parts &&
+                  result.candidates[0].content.parts.length > 0) {
+                  const aiResponseText = result.candidates[0].content.parts[0].text;
+                  addMessage('ai', aiResponseText); 
+                  return; 
+              } else {
+                  addMessage('ai', "I'm sorry, I couldn't generate a response. Please try again.");
+                  return; 
+              }
+          } catch (error) {
+              console.error("Error communicating with AI:", error);
+              if (i < MAX_RETRIES - 1) {
+                  await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS * (2 ** i))); 
+              } else {
+                  hideLoadingIndicator(); 
+                  addMessage('ai', "I apologize, I'm having trouble connecting right now. Please try again later.");
+              }
+          }
+      }
+    }
+
+
+    // Event listener for send button click
+    sendButton.addEventListener('click', () => {
+      const message = userInput.value.trim();
+      if (message) {
+        addMessage('user', message); 
+        userInput.value = ''; 
+        sendMessageToAI(message);
+      }
+    });
+
+    // Event listener for Enter key press
+    userInput.addEventListener('keypress', (event) => {
+      if (event.key === 'Enter') {
+        sendButton.click(); 
+      }
+    });
+
+    // Sidebar show/hide functionality for mobile/small screens
+    sidebarShowButton.addEventListener('click', () => {
+        sidebar.classList.remove('hidden-mobile');
+        sidebar.classList.add('show-mobile');
+    });
+
+    sidebarHideButton.addEventListener('click', () => {
+        sidebar.classList.add('hidden-mobile');
+        sidebar.classList.remove('show-mobile');
+    });
+
+    // Sidebar collapse/expand functionality for desktop
+    sidebarCollapseButton.addEventListener('click', () => {
+        isSidebarCollapsed = !isSidebarCollapsed;
+        sidebar.classList.toggle('sidebar-collapsed', isSidebarCollapsed);
+        
+        // Change icon based on collapse state
+        if (isSidebarCollapsed) {
+            sidebarCollapseButton.innerHTML = `
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H6m-3 0a9 9 0 1118 0 9 9 0 01-18 0z"></path>
+                </svg>
+            `; // Right arrow to expand
+        } else {
+            sidebarCollapseButton.innerHTML = `
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z"></path>
+                </svg>
+            `; // Left arrow to collapse
+        }
+    });
+
+    // Adjust sidebar visibility and collapse state on resize and initial load
+    function applySidebarVisibilityAndCollapseState() {
+        if (window.innerWidth <= 768) { 
+            // Mobile logic: always start hidden, and desktop collapse button is hidden
+            sidebar.classList.add('hidden-mobile');
+            sidebar.classList.remove('show-mobile'); 
+            sidebarShowButton.style.display = 'block'; // Show mobile toggle
+            sidebarCollapseButton.style.display = 'none'; // Hide desktop collapse button
+            sidebar.classList.remove('sidebar-collapsed'); // Ensure desktop collapse state is off
+            isSidebarCollapsed = false; // Reset collapse state
+        } else { 
+            // Desktop logic: always show, and mobile toggle is hidden
+            sidebar.classList.remove('hidden-mobile'); 
+            sidebar.classList.add('show-mobile'); 
+            sidebarShowButton.style.display = 'none'; // Hide mobile toggle
+            sidebarCollapseButton.style.display = 'block'; // Show desktop collapse button
+
+            // Apply collapse state based on `isSidebarCollapsed`
+            sidebar.classList.toggle('sidebar-collapsed', isSidebarCollapsed);
+             // Ensure correct icon is shown on desktop load/resize
+            if (isSidebarCollapsed) {
+                sidebarCollapseButton.innerHTML = `
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H6m-3 0a9 9 0 1118 0 9 9 0 01-18 0z"></path>
+                    </svg>
+                `;
+            } else {
+                sidebarCollapseButton.innerHTML = `
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z"></path>
+                    </svg>
+                `;
+            }
+        }
+    }
+
+    window.addEventListener('resize', applySidebarVisibilityAndCollapseState);
+
+
+    // New chat button functionality (clears messages and storage)
+    newChatButton.addEventListener('click', () => {
+        chatMessages.innerHTML = `
+            <div class="ai-message message-bubble">
+                **Greetings! I am HAI 1, Horizon Labs' flagship AI model. How may I assist you today?** 💡
+            </div>
+        `;
+        userInput.value = '';
+        currentChatMessages = [{ 
+            role: "model", 
+            parts: [{ text: "**Greetings! I am HAI 1, Horizon Labs' flagship AI model. How may I assist you today?** 💡" }] 
+        }]; 
+        sessionStorage.removeItem(SESSION_STORAGE_KEY); 
+        saveChatToSessionStorage(); 
+    });
+
+    // Warning Modal display logic
+    function showModal() {
+        if (!sessionStorage.getItem(MODAL_SHOWN_KEY)) {
+            modalWarningText.innerHTML = convertMarkdownToHtml(modalWarningText.textContent); 
+            warningModal.classList.add('show');
+        }
+    }
+
+    function hideModal() {
+        warningModal.classList.remove('show');
+        sessionStorage.setItem(MODAL_SHOWN_KEY, 'true'); 
+    }
+
+    modalCloseButton.addEventListener('click', hideModal);
+    modalConfirmButton.addEventListener('click', hideModal);
+
+    // Feedback Modal display logic
+    function showFeedbackModal() {
+        feedbackFormModal.classList.add('show');
+        feedbackTextarea.value = ''; // Clear previous feedback
+        feedbackThankYouMessage.classList.add('hidden'); // Hide thank you message
+    }
+
+    function hideFeedbackModal() {
+        feedbackFormModal.classList.remove('show');
+    }
+
+    feedbackButton.addEventListener('click', showFeedbackModal);
+    feedbackModalCloseButton.addEventListener('click', hideFeedbackModal);
+    feedbackSubmitButton.addEventListener('click', () => {
+        const feedback = feedbackTextarea.value.trim();
+        if (feedback) {
+            console.log("Feedback submitted:", feedback);
+            feedbackThankYouMessage.classList.remove('hidden');
+            setTimeout(hideFeedbackModal, 2000); // Hide after 2 seconds
+        }
+    });
+
+    // Settings Modal display logic
+    function showSettingsModal() {
+        settingsModal.classList.add('show');
+    }
+
+    function hideSettingsModal() {
+        settingsModal.classList.remove('show');
+    }
+
+    settingsButton.addEventListener('click', showSettingsModal);
+    settingsModalCloseButton.addEventListener('click', hideSettingsModal);
+    settingsModalOkButton.addEventListener('click', hideSettingsModal);
+
+
+    // Initial setup on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        loadChatFromSessionStorage();
+        applySidebarVisibilityAndCollapseState(); // Apply correct sidebar state on load
+        showModal(); // Show the warning modal on initial load if not already seen
+    });
+
+  </script>
+</body>
+</html>
