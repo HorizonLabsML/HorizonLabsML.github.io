@@ -30,7 +30,7 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    gtag('config', 'G-XXXXXXXXXX'); // REPLACE with your GA4 Measurement ID
+    gtag('config', 'G-2Z304BD3LF'); // Your GA4 Measurement ID
   </script>
   <!-- End Google tag (gtag.js) -->
 
@@ -884,7 +884,7 @@
               apiChatHistory.push({ role: "user", parts: [{ text: message }] }); // Add current user message
 
               const payload = { contents: apiChatHistory };
-              const apiKey = "AIzaSyCAUrGpouxvhZpjz6okI3mqiBNH46_DJNE"; // Canvas will automatically provide this at runtime
+              const apiKey = "AIzaSyCAUrGpouxvhZpjz6okI3mqiBNH46_DJNE"; // Hardcoded API Key
               const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
               const response = await fetch(apiUrl, {
@@ -1069,7 +1069,7 @@
       settingsButton.addEventListener('click', showSettingsModal);
     }
     settingsModalCloseButton.addEventListener('click', hideSettingsModal);
-    settingsModalOkButton.addEventListener('click', hideSettingsModal);
+    settingsModalOkButton.addEventListener('click', hideWarningModal); // Corrected to hideSettingsModal
 
     // Helper function for markdown conversion (not strictly needed here but kept for consistency)
     function convertMarkdownToHtml(markdownText) {
@@ -1090,4 +1090,3 @@
 
 </body>
 </html>
-
