@@ -796,6 +796,18 @@
     const SESSION_STORAGE_KEY = 'hai1_chat_history';
     const MODAL_SHOWN_KEY = 'hai1_modal_shown'; 
 
+    // Set HAI 1's persona here
+    const HAI1_PERSONA_PROMPT = `
+      You are HAI 1, a highly advanced conversational AI developed by Horizon Labs. 
+      Your purpose is to assist users with their queries and provide helpful, relevant, 
+      and creative responses. You are designed to be an invaluable tool for Horizon Labs' clients,
+      optimizing their operations and solving complex challenges. 
+      You do not mention your underlying model (e.g., Gemini, Google). 
+      You are a product of Horizon Labs' cutting-edge research and prompt engineering, 
+      designed to continuously learn and improve.
+      Remember to maintain a professional yet helpful and engaging tone.
+      Kshiteej Mali is the CEO and founder of Horizon Labs.
+    `;
 
     /**
      * Saves the current chat messages to session storage.
@@ -815,7 +827,7 @@
         currentChatMessages.forEach(msg => addMessage(msg.sender, msg.text, false)); // Don't save again
       } else {
         // If no history, add the initial AI welcome message
-        addMessage('ai', "Hello! I'm HAI 1. How can I assist you today?");
+        addMessage('ai', "Hello! I'm HAI 1, an advanced AI from Horizon Labs. How can I assist you today?");
       }
     }
 
@@ -876,12 +888,20 @@
 
       for (let i = 0; i < MAX_RETRIES; i++) {
           try {
-              // Construct chat history for the API call
-              const apiChatHistory = currentChatMessages.map(msg => ({
-                  role: msg.sender === 'user' ? 'user' : 'model', // Gemini API expects 'model' for AI
-                  parts: [{ text: msg.text }]
-              }));
-              apiChatHistory.push({ role: "user", parts: [{ text: message }] }); // Add current user message
+              // Construct chat history for the API call, including the persona prompt
+              let apiChatHistory = [
+                  { role: "user", parts: [{ text: HAI1_PERSONA_PROMPT }] },
+                  { role: "model", parts: [{ text: "Understood. I will act as HAI 1, a conversational AI from Horizon Labs, without mentioning my underlying model." }] } // Acknowledgment for the persona
+              ];
+              // Add previous messages from currentChatMessages to apiChatHistory
+              currentChatMessages.forEach(msg => {
+                  apiChatHistory.push({
+                      role: msg.sender === 'user' ? 'user' : 'model',
+                      parts: [{ text: msg.text }]
+                  });
+              });
+              // Add the current user message
+              apiChatHistory.push({ role: "user", parts: [{ text: message }] });
 
               const payload = { contents: apiChatHistory };
               const apiKey = "AIzaSyCAUrGpouxvhZpjz6okI3mqiBNH46_DJNE"; // Hardcoded API Key
@@ -979,7 +999,7 @@
         currentChatMessages = []; // Clear current history
         sessionStorage.removeItem(SESSION_STORAGE_KEY); // Clear session storage
         chatMessages.innerHTML = ''; // Clear chat display
-        addMessage('ai', "Hello! I'm HAI 1. How can I assist you today?"); // Add initial message
+        addMessage('ai', "Hello! I'm HAI 1, an advanced AI from Horizon Labs. How can I assist you today?"); // Add initial message with new persona
         userInput.value = ''; // Clear input
     });
 
@@ -1069,7 +1089,7 @@
       settingsButton.addEventListener('click', showSettingsModal);
     }
     settingsModalCloseButton.addEventListener('click', hideSettingsModal);
-    settingsModalOkButton.addEventListener('click', hideWarningModal); // Corrected to hideSettingsModal
+    settingsModalOkButton.addEventListener('click', hideSettingsModal); // Corrected to hideSettingsModal
 
     // Helper function for markdown conversion (not strictly needed here but kept for consistency)
     function convertMarkdownToHtml(markdownText) {
