@@ -894,14 +894,15 @@
                   { role: "model", parts: [{ text: "Understood. I will act as HAI 1, a conversational AI from Horizon Labs, without mentioning my underlying model." }] } // Acknowledgment for the persona
               ];
               // Add previous messages from currentChatMessages to apiChatHistory
+              // The latest user message is already in currentChatMessages from the addMessage call
               currentChatMessages.forEach(msg => {
                   apiChatHistory.push({
                       role: msg.sender === 'user' ? 'user' : 'model',
                       parts: [{ text: msg.text }]
                   });
               });
-              // Add the current user message
-              apiChatHistory.push({ role: "user", parts: [{ text: message }] });
+              // Removed the redundant push for the current user message:
+              // apiChatHistory.push({ role: "user", parts: [{ text: message }] }); // <-- THIS LINE WAS REMOVED
 
               const payload = { contents: apiChatHistory };
               const apiKey = "AIzaSyCAUrGpouxvhZpjz6okI3mqiBNH46_DJNE"; // Hardcoded API Key
@@ -1089,7 +1090,7 @@
       settingsButton.addEventListener('click', showSettingsModal);
     }
     settingsModalCloseButton.addEventListener('click', hideSettingsModal);
-    settingsModalOkButton.addEventListener('click', hideSettingsModal); // Corrected to hideSettingsModal
+    settingsModalOkButton.addEventListener('click', hideSettingsModal);
 
     // Helper function for markdown conversion (not strictly needed here but kept for consistency)
     function convertMarkdownToHtml(markdownText) {
