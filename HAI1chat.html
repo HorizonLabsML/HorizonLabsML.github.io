@@ -21,7 +21,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700;900&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@700&display=swap" rel="stylesheet">
 
-  <link rel="icon" href="your-logo.png" type="image/png"> <!-- Favicon -->
+  <link rel="icon" href="your-logo.png" type="image/png" sizes="32x32"> <!-- Favicon -->
+  <link rel="apple-touch-icon" href="your-logo.png" sizes="180x180"> <!-- Apple touch icon -->
 
   <style>
     /* Ensure html and body take full viewport height */
@@ -46,8 +47,8 @@
 
     /* Light mode styles */
     body.light-mode {
-      background-color: #ffffff;
-      color: #1a202c;
+      background-color: #f8fafc; /* Light gray background instead of pure white */
+      color: #1e293b; /* Dark slate for better readability */
     }
 
     /* AI Glow Background */
@@ -212,6 +213,24 @@
     body.light-mode .top-header {
       background-color: #ffffff;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      color: #1e293b;
+    }
+
+    body.light-mode .top-header h2 {
+      color: #1e293b !important;
+    }
+
+    /* Logo color inversion for light mode */
+    body.light-mode img {
+      filter: invert(1) brightness(0.2); /* Inverts colors and makes them darker */
+    }
+
+    body.light-mode .nav-link-button {
+      color: #475569; /* Slate-600 for nav links */
+    }
+
+    body.light-mode .nav-link-button:hover {
+      color: #0891b2; /* Cyan-600 on hover */
     }
     .top-header .logo-section {
         display: flex;
@@ -273,8 +292,33 @@
     }
 
     body.light-mode #sidebar {
-      background-color: #f8f9fa;
-      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      background-color: #ffffff;
+      border-right: 1px solid rgba(0, 0, 0, 0.15);
+      color: #1e293b;
+    }
+
+    body.light-mode #sidebar h2 {
+      color: #1e293b !important;
+    }
+
+    body.light-mode #sidebar .text-gray-400 {
+      color: #64748b !important; /* Slate-500 */
+    }
+
+    body.light-mode #sidebar .text-gray-300 {
+      color: #475569 !important; /* Slate-600 */
+    }
+
+    body.light-mode #sidebar .hover\\:bg-gray-700:hover {
+      background-color: #f1f5f9 !important; /* Slate-100 */
+    }
+
+    body.light-mode #sidebar .bg-cyan-600 {
+      background-color: #0891b2 !important; /* Cyan-600 */
+    }
+
+    body.light-mode #sidebar .hover\\:bg-cyan-700:hover {
+      background-color: #0e7490 !important; /* Cyan-700 */
     }
     
     /* Collapsed state for sidebar on desktop */
@@ -354,7 +398,7 @@
     }
 
     body.light-mode .main-content {
-      background-color: #ffffff;
+      background-color: #f8fafc;
     }
 
     .chat-container {
@@ -371,7 +415,8 @@
     }
 
     body.light-mode .chat-container {
-      background-color: #f8f9fa;
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
     }
 
     .chat-messages {
@@ -415,6 +460,11 @@
       border-bottom-right-radius: 0.25rem; /* Pointy corner */
     }
 
+    body.light-mode .user-message {
+      background-color: #0891b2; /* Cyan-600 for better contrast in light mode */
+      color: #ffffff;
+    }
+
     .ai-message {
       background-color: rgba(31, 41, 55, 0.8); /* gray-800 with transparency */
       backdrop-filter: blur(5px);
@@ -426,9 +476,10 @@
     }
 
     body.light-mode .ai-message {
-      background-color: rgba(248, 249, 250, 0.9);
-      color: #1a202c;
-      border: 1px solid rgba(0, 0, 0, 0.1);
+      background-color: #f1f5f9; /* Slate-100 */
+      color: #1e293b; /* Dark slate */
+      border: 1px solid #cbd5e1; /* Slate-300 */
+      backdrop-filter: none;
     }
 
     /* AI message typing animation styles */
@@ -489,6 +540,17 @@
       outline: none;
       border-color: #00bcd4;
       background-color: rgba(255, 255, 255, 0.12);
+    }
+
+    body.light-mode .chat-input {
+      background-color: #ffffff;
+      border: 1px solid #cbd5e1; /* Slate-300 */
+      color: #1e293b;
+    }
+
+    body.light-mode .chat-input:focus {
+      border-color: #0891b2; /* Cyan-600 */
+      background-color: #f8fafc;
     }
 
     .send-button {
@@ -1296,10 +1358,23 @@
         addMessage('user', message);
         userInput.value = '';
 
-        // Auto-close sidebar on mobile when sending message
+        // Auto-close sidebar when sending message (all screen sizes)
         if (window.innerWidth <= 768) {
+          // Mobile: hide sidebar completely
           sidebar.classList.add('hidden-mobile');
           sidebar.classList.remove('show-mobile');
+        } else {
+          // Desktop: collapse sidebar if expanded
+          if (!isSidebarCollapsed) {
+            sidebar.classList.add('sidebar-collapsed');
+            isSidebarCollapsed = true;
+            // Update collapse button icon
+            sidebarCollapseButton.innerHTML = `
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H6m-3 0a9 9 0 1118 0 9 9 0 01-18 0z"></path>
+                </svg>
+            `;
+          }
         }
 
         sendMessageToAI(message);
@@ -1324,15 +1399,31 @@
         sidebar.classList.remove('show-mobile');
     });
 
-    // Auto-hide sidebar when clicking outside on mobile
+    // Auto-hide sidebar when clicking outside (all screen sizes)
     document.addEventListener('click', (event) => {
-        if (window.innerWidth <= 768) {
-            const isClickInsideSidebar = sidebar.contains(event.target);
-            const isClickOnToggleButton = sidebarShowButton.contains(event.target);
+        const isClickInsideSidebar = sidebar.contains(event.target);
+        const isClickOnToggleButton = sidebarShowButton.contains(event.target);
+        const isClickOnCollapseButton = sidebarCollapseButton.contains(event.target);
 
-            if (!isClickInsideSidebar && !isClickOnToggleButton && !sidebar.classList.contains('hidden-mobile')) {
-                sidebar.classList.add('hidden-mobile');
-                sidebar.classList.remove('show-mobile');
+        if (!isClickInsideSidebar && !isClickOnToggleButton && !isClickOnCollapseButton) {
+            if (window.innerWidth <= 768) {
+                // Mobile: hide sidebar completely
+                if (!sidebar.classList.contains('hidden-mobile')) {
+                    sidebar.classList.add('hidden-mobile');
+                    sidebar.classList.remove('show-mobile');
+                }
+            } else {
+                // Desktop: collapse sidebar if expanded
+                if (!isSidebarCollapsed) {
+                    sidebar.classList.add('sidebar-collapsed');
+                    isSidebarCollapsed = true;
+                    // Update collapse button icon
+                    sidebarCollapseButton.innerHTML = `
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H6m-3 0a9 9 0 1118 0 9 9 0 01-18 0z"></path>
+                        </svg>
+                    `;
+                }
             }
         }
     });
@@ -1467,10 +1558,16 @@
     // Theme toggle functionality
     function toggleTheme() {
         document.body.classList.toggle('light-mode');
-        themeToggle.classList.toggle('active');
+
+        // Update toggle state (inverted logic: ON = dark mode, OFF = light mode)
+        const isLightMode = document.body.classList.contains('light-mode');
+        if (isLightMode) {
+            themeToggle.classList.remove('active'); // Light mode = toggle OFF
+        } else {
+            themeToggle.classList.add('active'); // Dark mode = toggle ON
+        }
 
         // Save theme preference
-        const isLightMode = document.body.classList.contains('light-mode');
         localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
     }
 
@@ -1479,11 +1576,11 @@
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'light') {
             document.body.classList.add('light-mode');
-            themeToggle.classList.add('active');
+            themeToggle.classList.remove('active'); // Light mode = toggle OFF
         } else {
             // Default to dark mode (absolute black theme)
             document.body.classList.remove('light-mode');
-            themeToggle.classList.remove('active');
+            themeToggle.classList.add('active'); // Dark mode = toggle ON (default)
         }
     }
 
